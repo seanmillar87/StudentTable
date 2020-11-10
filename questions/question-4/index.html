@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Question 4</title>
+    <style id="jsbin-css">
+        .UserCard {
+            display: flex;
+        }
+
+        .Avatar {
+            max-width: 5rem;
+            margin-right: 1rem;
+        }
+
+        .Name {
+            margin: 0 0 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="UserCard">
+        <picture>
+            <img src="" class="Avatar js-Avatar" title=""/>
+        </picture>
+        <div class="CardInformation">
+            <h1 class="Name js-Name"></h1>
+            <div class="RepoNumber">
+                Repos: <span class="js-RepoNumber"></span>
+            </div>
+            <div class="Followers">
+                Followers: <span class="js-Followers"></span>
+            </div>
+        </div>
+    </section>
+
+    <script id="jsbin-javascript">
+        // With the API endpoint provided in the file call the API and display the
+        // Avatar, Name, Number of Public Repos and Followers on the page.
+
+
+        class populateUserCardInformation {
+            constructor(url, element) {
+                this.url = url;
+                this.element = element;
+                this.apiData = [];
+
+                this.initialize();
+            }
+
+            async initialize() {
+                await this.getDataFromApi();
+                this.addDataToCard();
+            }
+
+            async getDataFromApi() {
+
+                const response = await fetch(this.url);
+                const jsonResponse = await response.json();
+
+                this.apiData.avatar_url = jsonResponse.avatar_url;
+                this.apiData.name = jsonResponse.name;
+                this.apiData.public_repos = jsonResponse.public_repos;
+                this.apiData.followers = jsonResponse.followers;
+            }
+
+            addDataToCard() {
+                this.element.querySelector('.js-Avatar').src = this.apiData.avatar_url;
+                this.element.querySelector('.js-Name').innerText = this.apiData.name;
+                this.element.querySelector('.js-RepoNumber').innerText = this.apiData.public_repos;
+                this.element.querySelector('.js-Followers').innerText = this.apiData.followers;
+            }
+        }
+
+        new populateUserCardInformation(
+                'https://api.github.com/orgs/clicksco',
+                document.querySelector('.UserCard')
+        );
+    </script>
+</body>
+</html>
